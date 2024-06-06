@@ -7,6 +7,11 @@
 </head>
 <body>
     <h1>Customers List</h1>
+    {{-- here search function used --}}
+    <form action="" method="">
+        <input type="search" name="search" id="name" value="{{ old('search', $search ?? '') }}">
+        <button type="submit">Search</button>
+    </form>
     <table>
         <thead>
             <tr>

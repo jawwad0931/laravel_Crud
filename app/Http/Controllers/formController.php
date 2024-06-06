@@ -8,6 +8,7 @@ use App\Models\_customer;
 
 class formController extends Controller
 {
+  
     public function Index(){
         $url = url('/reg');
         $title = "Customer Form";
@@ -16,16 +17,38 @@ class formController extends Controller
     }
 
     public function register(request $request){
+        $request->validate(
+            [
+                'name'=> 'required|string|max:255',
+                'grade'=> 'required',
+            ]
+            );
+
+
         $customer = new _customer;
         $customer->name = $request->input('name');
         $customer->grade = $request->input('grade');
         $customer->save();
         return redirect('/reg/view');
     }
-    public function view()
-    {
-       
-        $customers = _customer::all();
+    // public function view()
+    // {     
+    //     $customers = _customer::all();
+    //     // dd($customers);
+    //     return view('view', compact('customers'));
+        
+    // }
+    
+    
+    // basically this is used for searching
+     public function view(request $request)
+    {   
+        $search = $request['search'] ?? "";
+        if($search !== ""){
+            $customers = _customer::where('name','like',"%$search%")->get();
+        } else{
+            $customers = _customer::all();
+        }
         // dd($customers);
         return view('view', compact('customers'));
         
@@ -66,6 +89,10 @@ class formController extends Controller
         $customer->delete();
     }
     return redirect('/reg/view')->with('success', 'Customer deleted successfully.');
+}
+
+public function IndexHome(){
+    return view('home');
 }
 
 }
